@@ -11,9 +11,19 @@ contract LockedCortexOffer {
     uint256 public immutable fee; //bps
     bool public hasEnded = false;
 
-    ICortexToken CORTEX = ICortexToken(0xb21Be1Caf592A5DC1e75e418704d1B6d50B0d083);
+    // Mainnet
+    // ICortexToken CORTEX = ICortexToken(0xb21Be1Caf592A5DC1e75e418704d1B6d50B0d083);
 
-    event OfferFilled(address buyer, uint256 cortexAmount, address token, uint256 tokenAmount);
+    // Testnet
+    ICortexToken CORTEX =
+        ICortexToken(0xAAB438C6881a8D7539d4A52724343bCdc54e32F1);
+
+    event OfferFilled(
+        address buyer,
+        uint256 cortexAmount,
+        address token,
+        uint256 tokenAmount
+    );
     event OfferCanceled(address seller, uint256 cortexAmount);
 
     constructor(
@@ -47,12 +57,17 @@ contract LockedCortexOffer {
         uint256 txFee = mulDiv(amountWanted, fee, 10_000);
 
         // cap fee at 25k
-        uint256 maxFee = 25_000 * 10**IERC20(tokenWanted).decimals();
+        uint256 maxFee = 25_000 * 10 ** IERC20(tokenWanted).decimals();
         txFee = txFee > maxFee ? maxFee : txFee;
 
         uint256 amountAfterFee = amountWanted - txFee;
         // collect fee
-        safeTransferFrom(tokenWanted, msg.sender, IOwnable(factory).owner(), txFee);
+        safeTransferFrom(
+            tokenWanted,
+            msg.sender,
+            IOwnable(factory).owner(),
+            txFee
+        );
         // exchange assets
         safeTransferFrom(tokenWanted, msg.sender, seller, amountAfterFee);
         CORTEX.transferAll(msg.sender);
@@ -81,14 +96,15 @@ contract LockedCortexOffer {
         return (x * y) / z;
     }
 
-    function safeTransfer(
-        address token,
-        address to,
-        uint256 value
-    ) internal {
+    function safeTransfer(address token, address to, uint256 value) internal {
         // bytes4(keccak256(bytes('transfer(address,uint256)')));
-        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0xa9059cbb, to, value));
-        require(success && (data.length == 0 || abi.decode(data, (bool))), "safeTransfer: failed");
+        (bool success, bytes memory data) = token.call(
+            abi.encodeWithSelector(0xa9059cbb, to, value)
+        );
+        require(
+            success && (data.length == 0 || abi.decode(data, (bool))),
+            "safeTransfer: failed"
+        );
     }
 
     function safeTransferFrom(
@@ -98,7 +114,12 @@ contract LockedCortexOffer {
         uint256 value
     ) internal {
         // bytes4(keccak256(bytes('transferFrom(address,address,uint256)')));
-        (bool success, bytes memory data) = token.call(abi.encodeWithSelector(0x23b872dd, from, to, value));
-        require(success && (data.length == 0 || abi.decode(data, (bool))), "safeTransferFrom: failed");
+        (bool success, bytes memory data) = token.call(
+            abi.encodeWithSelector(0x23b872dd, from, to, value)
+        );
+        require(
+            success && (data.length == 0 || abi.decode(data, (bool))),
+            "safeTransferFrom: failed"
+        );
     }
 }

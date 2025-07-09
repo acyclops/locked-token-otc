@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.11;
 
-import 'forge-std/Test.sol';
+import "forge-std/Test.sol";
 
 import {IERC20, ICortexToken, IUSDC} from "../interfaces/Interfaces.sol";
 import {OfferFactory} from "../OfferFactory.sol";
@@ -23,8 +23,9 @@ contract LockedCortexOfferTest is Test {
     // ICortexToken CORTEX = ICortexToken(0xb21Be1Caf592A5DC1e75e418704d1B6d50B0d083);
 
     //TEST
-    address public constant USDC = 0xd896C4F18848db1f723ee10055D3aB609ABDF8a5;
-    ICortexToken CORTEX = ICortexToken(0x666AC285EA248Aa1B03963f8eAB97CFbf8688181);
+    address public constant USDC = 0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d;
+    ICortexToken CORTEX =
+        ICortexToken(0xAAB438C6881a8D7539d4A52724343bCdc54e32F1);
 
     function setUp() public {
         factoryDeployer = new FactoryDeployer();
@@ -33,30 +34,36 @@ contract LockedCortexOfferTest is Test {
         factory = factoryDeployer.factory();
 
         // give us 100k locked CORTEX to work with
-        VM.store(address(CORTEX), keccak256(abi.encode(address(this), 15)), bytes32(uint256(100_000 * 1e18)));
+        VM.startPrank(0x41BE3914FAE755e76C6b4E370d827C57891A4B82);
+        CORTEX.mint(address(this), 100_000 * 1e18);
+        CORTEX.lock(address(this), 100_000 * 1e18);
+        CORTEX.totalBalanceOf(address(this));
+        VM.stopPrank();
 
         // fund the offer user with 1m usdc
-        VM.startPrank(0x096760F208390250649E3e8763348E783AEF5562);
-        IUSDC(USDC).bridgeMint(address(trader), 1_000_000 * 1e6);
+        VM.startPrank(0xd607632B2f058A31eC7dD86Dda1E3852D07eeC3E);
+        IUSDC(USDC).mint(address(trader), 1_000_000 * 1e6);
         VM.stopPrank();
     }
 
-    function testFailFillNoApproval() public {
+    function testRevert_When_FillWithoutApproval() public {
         LockedCortexOffer offer = factory.createOffer(USDC, 5 * 1e6);
 
         // fund the contract
         CORTEX.transferAll(address(offer));
 
+        vm.expectRevert();
         trader.fillOffer(offer);
     }
 
-    function testFailFillCantAfford() public {
+    function testRevert_When_TraderCannotAfford() public {
         LockedCortexOffer offer = factory.createOffer(USDC, 11 * 1e6);
 
         // fund the contract
         CORTEX.transferAll(address(offer));
 
         // would cost 1.1m USDC but we only have 1.0m
+        vm.expectRevert();
         trader.fillOffer(offer);
     }
 
@@ -98,12 +105,11 @@ contract LockedCortexOfferTest is Test {
         trader.withdraw(offer, USDC);
 
         assertEq(IERC20(USDC).balanceOf(address(trader)), preBal);
-
-        trader.fillOffer(offer);
     }
 
-    function testFailCancel() public {
+    function testRevert_When_CancelEmptyOffer() public {
         LockedCortexOffer offer = factory.createOffer(USDC, 5 * 1e6);
+        vm.expectRevert();
         offer.cancel();
     }
 

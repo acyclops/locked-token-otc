@@ -21,6 +21,10 @@ interface ICortexToken {
     function transferAll(address _to) external;
 
     function lockOf(address _holder) external view returns (uint256);
+
+    function mint(address _to, uint256 amount) external;
+
+    function lock(address _holder, uint256 _amount) external;
 }
 
 interface ILockedCortexOffer {
@@ -32,7 +36,10 @@ interface ILockedCortexOffer {
 interface IOfferFactory {
     function offers() external view returns (ILockedCortexOffer[] memory);
 
-    function getActiveOffers() external view returns (ILockedCortexOffer[] memory);
+    function getActiveOffers()
+        external
+        view
+        returns (ILockedCortexOffer[] memory);
 }
 
 interface IOwnable {
@@ -41,4 +48,5 @@ interface IOwnable {
 
 interface IUSDC {
     function bridgeMint(address, uint256) external;
+    function mint(address, uint256) external;
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.11;
 
-import 'forge-std/Test.sol';
+import "forge-std/Test.sol";
 
 import {OfferFactory} from "../OfferFactory.sol";
 import {LockedCortexOffer} from "../LockedCortexOffer.sol";
@@ -12,7 +12,7 @@ contract OfferFactoryTest is Test {
     // LIVE
     // address public USDC = 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8;
 
-    address public USDC = 0xd896C4F18848db1f723ee10055D3aB609ABDF8a5;
+    address public USDC = 0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d;
 
     function setUp() public {
         factory = new OfferFactory();
