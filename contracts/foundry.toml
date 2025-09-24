@@ -1,6 +1,14 @@
 [profile.default]
 src = 'src'
 out = 'out'
-libs = ['lib']
+libs = ['lib', "dependencies"]
+
+[dependencies]
+forge-std = { version = "1.9.6", git = "https://github.com/foundry-rs/forge-std.git", tag = "v1.9.6" }
+"@openzeppelin-contracts" = { version = "4.9.6", git = "https://github.com/OpenZeppelin/openzeppelin-contracts.git", tag = "v4.9.6" }
+
+[soldeer]
+remappings_generate = true
+remappings_location = "txt"
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
