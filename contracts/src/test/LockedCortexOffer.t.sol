@@ -16,7 +16,7 @@ contract LockedCortexOfferTest is Test {
     FactoryDeployer factoryDeployer;
     Trader trader;
 
-    Vm constant VM = Vm(HEVM_ADDRESS);
+    Vm constant VM = Vm(VM_ADDRESS);
 
     // LIVE
     // address public constant USDC = 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8;

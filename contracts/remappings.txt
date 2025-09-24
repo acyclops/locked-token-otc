@@ -2,3 +2,4 @@
 @openzeppelin-contracts-4.9.6/=dependencies/@openzeppelin-contracts-4.9.6/
 @openzeppelin/=dependencies/@openzeppelin-contracts-4.9.6/
 forge-std-1.9.6/=dependencies/forge-std-1.9.6/
+forge-std/=dependencies/forge-std-1.9.6/src
