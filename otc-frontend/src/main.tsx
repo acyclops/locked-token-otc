@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import Providers from './providers';
 import App from './App';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import './index.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
