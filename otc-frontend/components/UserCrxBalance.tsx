@@ -7,7 +7,8 @@ interface UserCrxBalanceProps {
   children: (data: [number, number]) => ReactNode; // [balance, totalBalance]
 }
 
-const chainId = 42161; // Arbitrum One
+// const chainId = 42161; // Arbitrum one
+const chainId = 421614; // Arbitrum sepolia 
 
 const abi = parseAbi([
   'function totalBalanceOf(address) view returns (uint256)',

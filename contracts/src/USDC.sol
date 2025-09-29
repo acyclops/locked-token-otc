@@ -1,7 +1,7 @@
-import '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract USDC is ERC20 {
-    constructor(uint256 initial) ERC20("CUM", "CUM") {
+contract TestUSDC is ERC20 {
+    constructor(uint256 initial) ERC20("Test USDC", "TEST_USDC") {
         _mint(msg.sender, initial);
     }
 

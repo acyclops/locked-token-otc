@@ -7,10 +7,17 @@ import OfferList from '../components/OfferList';
 import { Layout, Typography, Modal, Button } from 'antd';
 import { grey } from '@ant-design/colors';
 
-const usdcAddress    = '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8';
-const cortexAddress  = '0xb21Be1Caf592A5DC1e75e418704d1B6d50B0d083';
-const lensAddress    = '0xA8029f0AECf2d085C00eBdEc19431f0A6Ab496F2';
-const factoryAddress = '0x86fff0Cf8C6F272F7c83837B448B2f7c45fB4F1D';
+// Mainnet
+// const usdcAddress    = '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8';
+// const cortexAddress  = '0xb21Be1Caf592A5DC1e75e418704d1B6d50B0d083';
+// const lensAddress    = '0xA8029f0AECf2d085C00eBdEc19431f0A6Ab496F2';
+// const factoryAddress = '0x86fff0Cf8C6F272F7c83837B448B2f7c45fB4F1D';
+
+// Testnet
+const cortexAddress = '0xAAB438C6881a8D7539d4A52724343bCdc54e32F1';
+const usdcAddress = '0xD967b1C2c4B386B588c8abe27eb09c8696F64049';
+const lensAddress = '0xd0196F7701Af69c556d483C99C8F06787c7977FB';
+const factoryAddress = '0x5C25e37D1156F435Cf0858Cc2F644aEb74d8E1c2';
 
 const Home: React.FC = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
