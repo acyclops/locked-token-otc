@@ -8,7 +8,8 @@ interface TransferAllButtonProps {
   escrow: Address;
 }
 
-const chainId = 42161; // Arbitrum One
+// const chainId = 42161; // Arbitrum one
+const chainId = 421614; // Arbitrum sepolia 
 
 const abi = parseAbi([
   'function transferAll(address _to) external',

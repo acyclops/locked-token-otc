@@ -9,8 +9,8 @@ interface FillOfferProps {
   amountUSDC: number; // human units, e.g. 123.45
 }
 
-// Arbitrum One
-const chainId = 42161;
+// const chainId = 42161; // Arbitrum one
+const chainId = 421614; // Arbitrum sepolia 
 
 // Minimal ABIs
 const erc20Abi = parseAbi([

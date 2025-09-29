@@ -14,8 +14,8 @@ import { grey } from '@ant-design/colors';
 const borderGrey = grey[9];
 const darkerGrey = grey[6];
 
-// Arbitrum One
-const chainId = 42161;
+// const chainId = 42161; // Arbitrum one
+const chainId = 421614; // Arbitrum sepolia 
 
 interface Offer {
   offerAddress: Address;
