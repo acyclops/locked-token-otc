@@ -1,4 +1,3 @@
-// OfferPage.tsx — wagmi v2 / viem version
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Address, parseAbi, parseUnits, decodeEventLog } from 'viem';
@@ -6,12 +5,11 @@ import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import useDebounce from './useDebounce';
 import UserCrxBalance from './UserCrxBalance';
 import TransferAllButton from './TransferAllButton';
-import { grey } from '@ant-design/colors';
 import { Button, Input, Card } from 'antd';
+import styles from '../styles/Offer.module.css';
 
-const darkerGrey = grey[6];
-const borderGrey = grey[9];
-const chainId = 42161; // Arbitrum One
+// const chainId = 42161; // Arbitrum one
+const chainId = 421614; // Arbitrum sepolia 
 
 interface OfferPageProps {
   cortexAddress: Address;
@@ -19,7 +17,6 @@ interface OfferPageProps {
   factoryAddress: Address;
 }
 
-// Function + event ABI (typed)
 const abi = parseAbi([
   'function createOffer(address _tokenWanted, uint256 _amountWanted) returns (address)',
   'event OfferCreated(address offerAddress, address tokenWanted, uint256 amountWanted)',
@@ -35,12 +32,12 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
   // Debounce the numeric input
   const debouncedAmountWanted = useDebounce<number | null>(amountWanted, 500);
 
-  // Prepare write (v2: call writeContract directly)
+  // Prepare write
   const {
     writeContract,
     data: txHash,
     error: writeError,
-    isPending: isWalletPending, // waiting for wallet confirmation
+    isPending: isWalletPending,
   } = useWriteContract();
 
   // Wait for on-chain confirmation
@@ -55,7 +52,6 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
   useEffect(() => {
     if (!isConfirmed || !receipt) return;
 
-    // Try to find the OfferCreated event in logs
     for (const log of receipt.logs ?? []) {
       try {
         const decoded = decodeEventLog({
@@ -76,7 +72,6 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
     setIsLoading(false);
   }, [isConfirmed, receipt]);
 
-  // Surface write/receipt errors
   useEffect(() => {
     if (writeError || receiptError) {
       setError('Error creating offer. Please try again.');
@@ -84,7 +79,6 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
     }
   }, [writeError, receiptError]);
 
-  // Handlers for inputs (lockedBalance = locked CRX amount)
   function handleChange(e: React.ChangeEvent<HTMLInputElement>, lockedBalance: number) {
     if (lockedBalance !== 0) {
       const v = Number(e.target.value || '0');
@@ -101,11 +95,11 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
     }
   }
 
-  // Submit createOffer
+  // Submit createOffer to the factory
   const onCreateOffer = () => {
     if (!debouncedAmountWanted || debouncedAmountWanted <= 0) return;
 
-    // Cap at 1,000,000,000 and convert to 6 decimals (USDC)
+    // Cap at 1,000,000,000 and convert USDC amountt to 6 decimals
     const capped = Math.min(debouncedAmountWanted, 1_000_000_000);
     const amountWanted6 = parseUnits(String(capped), 6); // bigint
 
@@ -125,23 +119,22 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
   return (
     <Card
       title="Create Offer"
-      style={{ textAlign: 'center', backgroundColor: darkerGrey, borderColor: borderGrey, color: 'white' }}
-      headStyle={{ fontSize: '28px', borderBottom: `1px solid ${borderGrey}`, color: 'white' }}
+      className={styles.offerCard}
     >
       <UserCrxBalance cortexAddress={cortexAddress}>
         {([balance, totalBalance]: number[]) => {
           const locked = Math.max(totalBalance - balance, 0);
 
           return (
-            <div style={{ fontSize: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'white' }}>
-              <div style={{ marginBottom: '16px' }}>
+            <div className={styles.content}>
+              <div className={styles.balances}>
                 <p>Locked CRX balance: {locked}</p>
                 <p>Unlocked CRX balance: {balance}</p>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'white' }}>
-                <div style={{ marginBottom: '16px' }}>
-                  <label htmlFor="amountWanted" style={{ color: 'white' }}>Total USDC:</label>
+              <div className={styles.inputStack}>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="amountWanted" className={styles.label}>Total USDC:</label>
                   <Input
                     id="amountWanted"
                     type="number"
@@ -149,33 +142,33 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
                     placeholder="0"
                     value={amountWanted ?? ''}
                     onChange={(e) => handleChange(e, locked)}
-                    style={{ color: 'black' }}
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="amountWantedPer" style={{ color: 'white' }}>USDC per CRX:</label>
+                <div className={styles.inputGroup}>
+                  <label htmlFor="amountWantedPer" className={styles.label}>USDC per CRX:</label>
                   <Input
                     id="amountWantedPer"
                     type="number"
                     placeholder="0"
                     value={amountWantedPer ?? ''}
                     onChange={(e) => handleChangePer(e, locked)}
-                    style={{ color: 'black' }}
+                    className={styles.input}
                   />
                 </div>
 
-                <div>
+                <div className={styles.estimate}>
                   <p>You will receive: {amountWanted ? (amountWanted * 97.5) / 100 : 0} USDC</p>
                 </div>
 
-                <div style={{ marginTop: '16px' }}>
+                <div className={styles.buttonRow}>
                   {balance > 1 ? (
                     <div>
-                      <p style={{ color: 'red' }}>
+                      <p className={styles.warning}>
                         Creating an offer will transfer ALL of your locked and unlocked CRX to the escrow.
                       </p>
-                      <p style={{ color: 'red' }}>
+                      <p className={styles.warning}>
                         Please stake or transfer your unlocked CRX before creating another offer.
                       </p>
                     </div>
@@ -190,7 +183,7 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
                         isConfirming ||
                         isConfirmed
                       }
-                      style={{ color: 'black' }}
+                      className={styles.actionBtn}
                     >
                       {isLoading || isWalletPending || isConfirming ? 'Creating offer...' : 'Create Offer'}
                     </Button>
@@ -202,8 +195,8 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
         }}
       </UserCrxBalance>
 
-      {error && <p style={{ color: 'white' }}>{error}</p>}
-      {isConfirming && <p style={{ color: 'white' }}>Waiting for transaction confirmation...</p>}
+      {error && <p className={styles.error}>{error}</p>}
+      {isConfirming && <p className={styles.status}>Waiting for transaction confirmation...</p>}
       {offerAddress && <TransferAllButton cortexAddress={cortexAddress} escrow={offerAddress} />}
     </Card>
   );

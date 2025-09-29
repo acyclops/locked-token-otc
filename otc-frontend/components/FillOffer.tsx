@@ -1,4 +1,3 @@
-// FillOffer.tsx — wagmi v2 / viem version
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { Address, parseAbi, parseUnits } from 'viem';

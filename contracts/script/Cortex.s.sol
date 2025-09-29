@@ -9,7 +9,14 @@ contract MyScript is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
 
-        Cortex crx = new Cortex("Cum", "CUM",1_000_000e18, 1000e18, 32758434, 42758434);
+        Cortex CRX = new Cortex(
+            "OTC Token",
+            "OTC",
+            1_000_000e18,
+            1000e18,
+            32758434,
+            42758434
+        );
 
         vm.stopBroadcast();
     }

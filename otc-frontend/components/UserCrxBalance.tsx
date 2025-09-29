@@ -1,4 +1,3 @@
-// src/components/UserCrxBalance.tsx
 import { ReactNode } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
 import { Address, parseAbi, formatUnits } from 'viem';

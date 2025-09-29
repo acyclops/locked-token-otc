@@ -68,3 +68,8 @@ a {
     flex-direction: column; 
   }
 }
+
+.appLayout {
+  min-height: 100vh;
+  background: var(--bg-app);
+}

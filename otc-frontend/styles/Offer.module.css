@@ -1,0 +1,105 @@
+:root {
+  --offer-darker: #1f1f1f;
+  --offer-border: #303030;
+  --text-on-dark: #fff;
+  --warning: #ff4d4f;
+}
+
+.offerCard {
+  background: var(--offer-darker);
+  border-color: var(--offer-border);
+  color: var(--text-on-dark);
+  text-align: center;
+}
+
+.offerCard :global(.ant-card-head) {
+  border-bottom: 1px solid var(--offer-border);
+}
+.offerCard :global(.ant-card-head-title) {
+  font-size: 28px;
+  color: var(--text-on-dark);
+}
+
+.content {
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-on-dark);
+}
+
+.balances {
+  margin-bottom: 16px;
+}
+
+.inputStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-on-dark);
+}
+
+.inputGroup {
+  margin-bottom: 16px;
+  text-align: center;
+  width: 420px;
+}
+
+@media (max-width: 520px) {
+  .inputGroup {
+    width: 100%;
+  }
+}
+
+.input {
+  color: #000;
+  background: #fff;
+  width: 70%;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+.label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-on-dark);
+}
+
+.estimate {
+  margin-top: 4px;
+}
+
+.buttonRow {
+  margin-top: 16px;
+}
+
+.actionBtn {
+  color: #000;
+}
+
+.actionBtn[disabled] {
+  background: #cfcfcf;
+  border-color: #cfcfcf;
+  color: #111;
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.actionBtn[disabled]:hover,
+.actionBtn[disabled]:focus {
+  background: #cfcfcf;
+  border-color: #cfcfcf;
+  color: #111;
+  box-shadow: none;
+}
+
+.warning {
+  color: var(--warning);
+  margin: 0;
+}
+
+.status,
+.error {
+  color: var(--text-on-dark);
+  margin-top: 12px;
+}

@@ -1,7 +1,6 @@
 // src/pages/Home.tsx (or src/Home.tsx)
 import * as React from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { Helmet } from 'react-helmet-async';
 import styles from '../styles/Home.module.css';
 import OfferPage from '../components/Offer';
 import OfferList from '../components/OfferList';
@@ -19,12 +18,6 @@ const Home: React.FC = () => {
   return (
     <Layout style={{ background: grey[7] }}>
       <div className={styles.container}>
-        {/* <Helmet>
-          <title>CRX OTC</title>
-          <link rel="icon" href="/favicon.ico" />
-          <meta name="CRX OTC" />
-        </Helmet> */}
-
         <main className={styles.main}>
           <h1 className={styles.title} style={{ color: 'white', fontSize: 50 }}>
             Trustless CRX OTC Desk
@@ -57,7 +50,9 @@ const Home: React.FC = () => {
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
         footer={null}
-        bodyStyle={{ background: '#262626', padding: 20, color: 'white', borderColor: grey[8] }}
+        styles={{
+          body: { background: '#262626', padding: 20, color: 'white', borderColor: grey[8] }
+        }}
         width={600}
       >
         <p>Verified Offer Factory: <a href={`https://arbiscan.io/address/${factoryAddress}`} target="_blank" rel="noopener noreferrer" style={{ color: '#6a5eff', textDecoration: 'underline' }}>{factoryAddress}</a></p>

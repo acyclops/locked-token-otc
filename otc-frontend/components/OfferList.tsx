@@ -212,7 +212,9 @@ const OfferItem = ({ offer, onCancel, seller, user, usdcAddress }: OfferItemProp
         borderColor: borderGrey,
         color: 'white',
       }}
-      headStyle={{ borderBottom: `1px solid ${borderGrey}` }}
+      styles={{
+        header: { borderBottom: `1px solid ${borderGrey}` }
+      }}
     >
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <p style={{ margin: '4px', fontSize: '20px' }}>
