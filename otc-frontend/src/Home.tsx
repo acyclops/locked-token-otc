@@ -38,12 +38,23 @@ const Home: React.FC = () => {
     'function gibLocked(uint256 amount)',
   ]);
 
+  const usdcAbi = parseAbi(["function mintMe()"]);
+
   const onGibTokens = () => {
     writeContract({
       address: cortexAddress,
       abi: cortexAbi,
       functionName: 'gibLocked',
       args: [parseUnits(String(100), 18)],
+      chainId
+    })
+  }
+
+  const onGibUsdc = () => {
+    writeContract({
+      address: usdcAddress,
+      abi: usdcAbi,
+      functionName: "mintMe",
       chainId
     })
   }
@@ -66,8 +77,11 @@ const Home: React.FC = () => {
             >
               Help
             </Button>
-            <Button onClick={onGibTokens} style={{ fontSize: 24, blockSize: '50%' }}>
+            <Button onClick={onGibTokens} style={{ fontSize: 24, blockSize: '50%', marginRight: 20 }}>
               GIB TOKENS
+            </Button>
+            <Button onClick={onGibUsdc} style={{ fontSize: 24, blockSize: '50%' }}>
+              GIB USDC
             </Button>
           </div>
 

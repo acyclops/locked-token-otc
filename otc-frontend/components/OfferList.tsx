@@ -102,7 +102,7 @@ const OfferList = ({ lensAddress, offerFactoryAddress, usdcAddress }: OfferListP
   const hasOffers =
     activeOffers &&
     activeOffers[0] &&
-    activeOffers[0].length > 1;
+    activeOffers[0].length >= 1;
 
   if (!hasOffers) {
     return <p className={s.centerText}>No active offers</p>;
