@@ -6,6 +6,11 @@ import OfferPage from '../components/Offer';
 import OfferList from '../components/OfferList';
 import { Layout, Typography, Modal, Button } from 'antd';
 import { grey } from '@ant-design/colors';
+import { useWriteContract } from 'wagmi';
+import { parseAbi, parseUnits } from 'viem';
+
+// const chainId = 42161; // Arbitrum one
+const chainId = 421614; // Arbitrum sepolia 
 
 // Mainnet
 // const usdcAddress    = '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8';
@@ -21,6 +26,27 @@ const factoryAddress = '0x5C25e37D1156F435Cf0858Cc2F644aEb74d8E1c2';
 
 const Home: React.FC = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
+
+  const {
+    writeContract,
+    data: txHash,
+    error: writeError,
+    isPending: isWalletPending,
+  } = useWriteContract();
+
+  const cortexAbi = parseAbi([
+    'function gibLocked(uint256 amount)',
+  ]);
+
+  const onGibTokens = () => {
+    writeContract({
+      address: cortexAddress,
+      abi: cortexAbi,
+      functionName: 'gibLocked',
+      args: [parseUnits(String(100), 18)],
+      chainId
+    })
+  }
 
   return (
     <Layout style={{ background: grey[7] }}>
@@ -39,6 +65,9 @@ const Home: React.FC = () => {
               style={{ fontSize: 24, blockSize: '50%' }}
             >
               Help
+            </Button>
+            <Button onClick={onGibTokens}>
+              GIB TOKENS
             </Button>
           </div>
 

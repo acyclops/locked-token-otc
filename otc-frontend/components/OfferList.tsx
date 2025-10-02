@@ -48,7 +48,7 @@ interface OfferListProps {
   usdcAddress: Address;
 }
 
-/** -------- Cancel helper (v2) ---------- */
+// Cancel offer helper
 const cancelAbi = parseAbi(['function cancel()']);
 
 function useOfferCancellation(offerAddress: Address) {
@@ -66,7 +66,7 @@ function useOfferCancellation(offerAddress: Address) {
   return { hash, cancel, isPending, error };
 }
 
-/** -------- Seller address reader (v2) ---------- */
+// Helper to grab seller addy
 const SellerAddress = ({ offerAddress, children }: SellerAddressProps) => {
   const { data: seller } = useReadContract({
     address: offerAddress,
@@ -79,16 +79,15 @@ const SellerAddress = ({ offerAddress, children }: SellerAddressProps) => {
   return <>{seller && children({ seller: seller as Address })}</>;
 };
 
-/** -------- Offer list (v2) ---------- */
 const OfferList = ({ lensAddress, offerFactoryAddress, usdcAddress }: OfferListProps) => {
   // Current connected user
   const { address } = useAccount();
   const user = address ?? '';
 
-  // Read all active offers from your Lens contract
+  // Read all active offers from Lens
   const { data: activeOffers, error } = useReadContract({
     address: lensAddress,
-    abi: lensAbi as const,
+    abi: lensAbi,
     functionName: 'getAllActiveOfferInfo',
     args: [offerFactoryAddress],
     chainId,
@@ -97,36 +96,38 @@ const OfferList = ({ lensAddress, offerFactoryAddress, usdcAddress }: OfferListP
   if (error) return <p>Error: {String(error.message ?? error)}</p>;
 
   // Handle empty state
-  // Expecting activeOffers to be an object like:
+  // activeOffers looks like:
   // { offerAddresses: Address[], cortexBalances: bigint[], tokenWanted: Address[], amountWanted: bigint[] }
   const hasOffers =
     activeOffers &&
-    (activeOffers as any).offerAddresses &&
-    (activeOffers as any).offerAddresses.length > 0;
+    activeOffers[0] &&
+    activeOffers[0].length > 1;
 
   if (!hasOffers) {
     return <p style={{ textAlign: 'center' }}>No active offers</p>;
   }
 
-  const ao = activeOffers as unknown as {
-    offerAddresses: Address[];
-    cortexBalances: bigint[];
-    tokenWanted: Address[];
-    amountWanted: bigint[];
-  };
+  const [
+  offerAddresses = [],
+  cortexBalances = [],
+  tokenWanted = [],
+  amountWanted = [],
+  ] = (activeOffers ?? []) as [Address[], bigint[], Address[], bigint[]];
 
-  // Build and sort offers by $ per CRX
-  const sortedOffers: Offer[] = ao.offerAddresses
+  console.log(offerAddresses);
+
+  // sort offers by $ per CRX
+  const sortedOffers: Offer[] = offerAddresses
     .map((addr, i) => {
-      const cortexBalHuman = Number(formatUnits(ao.cortexBalances[i] ?? 0n, 18)); // CRX (18d)
-      const amountUsdHuman = Number(formatUnits(ao.amountWanted[i] ?? 0n, 6));   // USDC (6d)
+      const cortexBalHuman = Number(formatUnits(cortexBalances[i] ?? 0n, 18)); // CRX (18d)
+      const amountUsdHuman = Number(formatUnits(amountWanted[i] ?? 0n, 6));   // USDC (6d)
       const pricePerCRX =
         cortexBalHuman > 0 ? amountUsdHuman / cortexBalHuman : Number.POSITIVE_INFINITY;
 
       return {
         offerAddress: addr,
         cortexBalance: cortexBalHuman,
-        tokenWanted: ao.tokenWanted[i],
+        tokenWanted: tokenWanted[i],
         amountWanted: amountUsdHuman,
         pricePerCRX,
       };
@@ -156,7 +157,7 @@ const OfferList = ({ lensAddress, offerFactoryAddress, usdcAddress }: OfferListP
   );
 };
 
-/** -------- Individual offer card (v2) ---------- */
+// Single offer card
 const OfferItem = ({ offer, onCancel, seller, user, usdcAddress }: OfferItemProps) => {
   const [isCanceling, setIsCanceling] = useState(false);
 
@@ -246,7 +247,6 @@ const OfferItem = ({ offer, onCancel, seller, user, usdcAddress }: OfferItemProp
         </p>
       </div>
 
-      {/* Pass human USDC amount to FillOffer (your converted component expects human units) */}
       <FillOffer
         offerAddress={offer.offerAddress}
         usdcAddress={offer.tokenWanted}
