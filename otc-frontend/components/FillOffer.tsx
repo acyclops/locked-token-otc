@@ -103,6 +103,8 @@ const FillOffer = ({ offerAddress, usdcAddress, amountUSDC }: FillOfferProps) =>
 
   const fillDisabled =
     !isConnected || !isApproved || isFillPending || isFillLoading || isFillSuccess;
+  
+  const explorer = "";
 
   return (
     <div>
@@ -125,6 +127,22 @@ const FillOffer = ({ offerAddress, usdcAddress, amountUSDC }: FillOfferProps) =>
             {isFillPending || isFillLoading ? 'Filling…' : 'Fill Offer'}
           </Button>
         )
+      )}
+
+      {isFillSuccess && (
+        <>
+          <Button disabled>Filled ✓</Button>
+          {fillHash && explorer && (
+            <a
+              href={`${explorer}/tx/${fillHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: 'underline', color: '#6a5eff' }}
+            >
+              View tx
+            </a>
+          )}
+        </>
       )}
 
       {status && <p>{status}</p>}
