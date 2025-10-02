@@ -10,6 +10,7 @@ import { lensAbi } from '../lens-abi';
 import FillOffer from './FillOffer';
 import { Button, Card } from 'antd';
 import { grey } from '@ant-design/colors';
+import s from '../styles/OfferList.module.css';
 
 const borderGrey = grey[9];
 const darkerGrey = grey[6];
@@ -19,9 +20,9 @@ const chainId = 421614; // Arbitrum sepolia
 
 interface Offer {
   offerAddress: Address;
-  cortexBalance: number;       // human units (CRX, 18 decimals)
+  cortexBalance: number;
   tokenWanted: Address;
-  amountWanted: number;        // human units (USDC, 6 decimals)
+  amountWanted: number;
   pricePerCRX: number;
 }
 
@@ -104,17 +105,15 @@ const OfferList = ({ lensAddress, offerFactoryAddress, usdcAddress }: OfferListP
     activeOffers[0].length > 1;
 
   if (!hasOffers) {
-    return <p style={{ textAlign: 'center' }}>No active offers</p>;
+    return <p className={s.centerText}>No active offers</p>;
   }
 
   const [
-  offerAddresses = [],
-  cortexBalances = [],
-  tokenWanted = [],
-  amountWanted = [],
+    offerAddresses = [],
+    cortexBalances = [],
+    tokenWanted = [],
+    amountWanted = [],
   ] = (activeOffers ?? []) as [Address[], bigint[], Address[], bigint[]];
-
-  console.log(offerAddresses);
 
   // sort offers by $ per CRX
   const sortedOffers: Offer[] = offerAddresses
@@ -136,9 +135,9 @@ const OfferList = ({ lensAddress, offerFactoryAddress, usdcAddress }: OfferListP
 
   return (
     <div>
-      <h2 style={{ color: 'white', textAlign: 'center' }}>Active Offers</h2>
-      <p style={{ color: 'white', textAlign: 'center' }}>Sorted by $ per CRX</p>
-      <ul style={{ display: 'grid', gap: '15px' }}>
+      <h2 className={s.headerTitle}>Active Offers</h2>
+      <p className={s.subheaderTitle}>Sorted by $ per CRX</p>
+      <ul className={s.gridList}>
         {sortedOffers.map((offer, index) => (
           <SellerAddress key={`${offer.offerAddress}-${index}`} offerAddress={offer.offerAddress}>
             {(seller) => (
@@ -195,13 +194,13 @@ const OfferItem = ({ offer, onCancel, seller, user, usdcAddress }: OfferItemProp
   return (
     <Card
       title={
-        <span style={{ color: 'white' }}>
+        <span className={s.cardTitle}>
           Offer Address:{' '}
           <a
             href={`https://arbiscan.io/address/${offer.offerAddress}`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#6a5eff', textDecoration: 'underline' }}
+            className={s.link}
           >
             {offer.offerAddress}
           </a>
@@ -217,31 +216,31 @@ const OfferItem = ({ offer, onCancel, seller, user, usdcAddress }: OfferItemProp
         header: { borderBottom: `1px solid ${borderGrey}` }
       }}
     >
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <p style={{ margin: '4px', fontSize: '20px' }}>
-          CRX Balance: <span style={{ color: '#E0E0E0' }}>{offer.cortexBalance}</span>
+      <div className={s.centerCol}>
+        <p className={s.row}>
+          CRX Balance: <span className={s.muted}>{offer.cortexBalance}</span>
         </p>
 
         {offer.tokenWanted === usdcAddress ? (
-          <p style={{ margin: '4px', fontSize: '20px' }}>
-            Token To Pay: <span style={{ color: '#E0E0E0' }}>USDC</span>
+          <p className={s.row}>
+            Token To Pay: <span className={s.muted}>USDC</span>
           </p>
         ) : (
-          <p style={{ margin: '4px', fontSize: '20px' }}>
-            Token To Pay: <span style={{ color: '#E0E0E0' }}>{offer.tokenWanted}</span>
+          <p className={s.row}>
+            Token To Pay: <span className={s.muted}>{offer.tokenWanted}</span>
           </p>
         )}
 
-        <p style={{ margin: '4px', fontSize: '20px' }}>
+        <p className={s.row}>
           Amount:{' '}
-          <span style={{ color: '#E0E0E0' }}>
+          <span className={s.muted}>
             {offer.amountWanted}
           </span>
         </p>
 
-        <p style={{ margin: '4px', fontSize: '20px' }}>
+        <p className={s.row}>
           $ per CRX:{' '}
-          <span style={{ color: '#E0E0E0' }}>
+          <span className={s.muted}>
             ${offer.pricePerCRX.toFixed(3)}
           </span>
         </p>
@@ -254,15 +253,15 @@ const OfferItem = ({ offer, onCancel, seller, user, usdcAddress }: OfferItemProp
       />
 
       {isCurrentUserSeller(seller?.seller) ? (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+        <div className={s.actions}>
           {isCancelSuccess ? (
-            <p style={{ color: 'red' }}>Offer cancelled</p>
+            <p className={s.cancelled}>Offer cancelled</p>
           ) : (
             <Button
               loading={isCancelPending || isCancelLoading}
               type="primary"
               onClick={handleCancel}
-              style={{ backgroundColor: 'red', borderColor: 'red' }}
+              className={s.dangerBtn}
               disabled={isCanceling || isCancelPending || isCancelLoading}
             >
               {isCancelPending || isCancelLoading ? 'Canceling…' : 'Cancel Offer'}

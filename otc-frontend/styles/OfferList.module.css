@@ -1,0 +1,58 @@
+.headerTitle {
+  color: #ffffff !important;
+  text-align: center;
+}
+
+.subheaderTitle {
+  color: #ffffff !important;
+  text-align: center;
+}
+
+.gridList {
+  display: grid;
+  gap: 15px;
+}
+
+.cardTitle {
+  color: #ffffff;
+}
+
+.link {
+  color: #6a5eff;
+  text-decoration: underline;
+}
+
+.centerCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.row {
+  margin: 4px;
+  font-size: 20px;
+}
+
+.muted {
+  color: #e0e0e0;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.cancelled {
+  color: red;
+}
+
+.dangerBtn {
+  /* AntD buttons often need !important for inline/priority */
+  background-color: red !important;
+  border-color: red !important;
+}
+
+.centerText {
+  text-align: center;
+}

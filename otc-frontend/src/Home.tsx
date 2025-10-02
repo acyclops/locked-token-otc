@@ -62,11 +62,11 @@ const Home: React.FC = () => {
             </Button>
             <Button
               onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeuRTsM_5GnIReHXP1eQE1lJZsNrkv0dgcmRAT2__fnBriQxw/viewform', '_blank')}
-              style={{ fontSize: 24, blockSize: '50%' }}
+              style={{ fontSize: 24, blockSize: '50%', marginRight: 20 }}
             >
               Help
             </Button>
-            <Button onClick={onGibTokens}>
+            <Button onClick={onGibTokens} style={{ fontSize: 24, blockSize: '50%' }}>
               GIB TOKENS
             </Button>
           </div>
