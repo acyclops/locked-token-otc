@@ -2,6 +2,8 @@
 
 A non-custodial OTC marketplace for trading locked ERC-20 tokens for USDC.
 
+**Live:** https://otc.acyclops.dev/
+
 ## Overview
 
 This dApp lets users create and fill escrow-based OTC offers without relying on intermediaries.
