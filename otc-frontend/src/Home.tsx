@@ -6,7 +6,7 @@ import OfferPage from '../components/Offer';
 import OfferList from '../components/OfferList';
 import { Layout, Typography, Modal, Button } from 'antd';
 import { grey } from '@ant-design/colors';
-import { useWriteContract } from 'wagmi';
+import { useWriteContract, useAccount } from 'wagmi';
 import { parseAbi, parseUnits } from 'viem';
 
 // const chainId = 42161; // Arbitrum one
@@ -29,35 +29,36 @@ const Home: React.FC = () => {
 
   const {
     writeContract,
-    data: txHash,
-    error: writeError,
     isPending: isWalletPending,
   } = useWriteContract();
 
-  const cortexAbi = parseAbi([
-    'function gibLocked(uint256 amount)',
-  ]);
+  const { isConnected } = useAccount();
 
-  const usdcAbi = parseAbi(["function mintMe()"]);
+  const cortexAbi = parseAbi(['function gibLocked(uint256 amount)']);
+  const usdcAbi = parseAbi(['function mintMe()']);
 
   const onGibTokens = () => {
+    if (!isConnected) return;
+
     writeContract({
       address: cortexAddress,
       abi: cortexAbi,
       functionName: 'gibLocked',
       args: [parseUnits(String(100), 18)],
-      chainId
-    })
-  }
+      chainId,
+    });
+  };
 
   const onGibUsdc = () => {
+    if (!isConnected) return;
+
     writeContract({
       address: usdcAddress,
       abi: usdcAbi,
-      functionName: "mintMe",
-      chainId
-    })
-  }
+      functionName: 'mintMe',
+      chainId,
+    });
+  };
 
   return (
     <Layout style={{ background: grey[7] }}>
@@ -68,29 +69,67 @@ const Home: React.FC = () => {
           </h1>
 
           <div style={{ display: 'flex' }}>
-            <Button onClick={() => setModalVisible(true)} style={{ fontSize: 24, blockSize: '50%', marginRight: 20 }}>
+            <Button
+              onClick={() => setModalVisible(true)}
+              style={{ fontSize: 24, blockSize: '50%', marginRight: 20 }}
+            >
               FAQ
             </Button>
+
             <Button
-              onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSeuRTsM_5GnIReHXP1eQE1lJZsNrkv0dgcmRAT2__fnBriQxw/viewform', '_blank')}
+              onClick={() =>
+                window.open(
+                  'https://docs.google.com/forms/d/e/1FAIpQLSeuRTsM_5GnIReHXP1eQE1lJZsNrkv0dgcmRAT2__fnBriQxw/viewform',
+                  '_blank'
+                )
+              }
               style={{ fontSize: 24, blockSize: '50%', marginRight: 20 }}
             >
               Help
             </Button>
-            <Button onClick={onGibTokens} style={{ fontSize: 24, blockSize: '50%', marginRight: 20 }}>
-              GIB TOKENS
-            </Button>
-            <Button onClick={onGibUsdc} style={{ fontSize: 24, blockSize: '50%' }}>
-              GIB USDC
-            </Button>
+            
+            {/* Only show faucet buttons when wallet connected */}
+            {isConnected && (
+              <>
+                <Button
+                  onClick={onGibTokens}
+                  disabled={!isConnected || isWalletPending}
+                  style={{ fontSize: 24, blockSize: '50%', marginRight: 20 }}
+                >
+                  Token Faucet
+                </Button>
+
+                <Button
+                  onClick={onGibUsdc}
+                  disabled={!isConnected || isWalletPending}
+                  style={{ fontSize: 24, blockSize: '50%' }}
+                >
+                  Test USDC Faucet
+                </Button>
+              </>
+            )}
           </div>
 
           <br />
-          <ConnectButton />
 
           <Typography.Text style={{ color: grey[0], fontSize: 16, fontWeight: 600, padding: 15 }}>
-            <OfferPage cortexAddress={cortexAddress} usdcAddress={usdcAddress} factoryAddress={factoryAddress} />
-            <OfferList lensAddress={lensAddress} offerFactoryAddress={factoryAddress} usdcAddress={usdcAddress} />
+            {isConnected ? (
+              <>
+                <OfferPage cortexAddress={cortexAddress} usdcAddress={usdcAddress} factoryAddress={factoryAddress} />
+                <OfferList lensAddress={lensAddress} offerFactoryAddress={factoryAddress} usdcAddress={usdcAddress} />
+              </>
+            ) : (
+              <div style={{ padding: 12 }}>
+                <div style={{ fontSize: 24, marginBottom: 10 }}>
+                  Connect your wallet to create and browse offers.
+                </div>
+                  
+                {/* Sort of redundant, but show connect button in center if wallet not connected */}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <ConnectButton />
+                </div>
+              </div>
+            )}
           </Typography.Text>
         </main>
       </div>
@@ -101,11 +140,22 @@ const Home: React.FC = () => {
         onCancel={() => setModalVisible(false)}
         footer={null}
         styles={{
-          body: { background: '#262626', padding: 20, color: 'white', borderColor: grey[8] }
+          body: { background: '#262626', padding: 20, color: 'white', borderColor: grey[8] },
         }}
         width={600}
       >
-        <p>Verified Offer Factory: <a href={`https://arbiscan.io/address/${factoryAddress}`} target="_blank" rel="noopener noreferrer" style={{ color: '#6a5eff', textDecoration: 'underline' }}>{factoryAddress}</a></p>
+        <p>
+          Verified Offer Factory:{' '}
+          <a
+            href={`https://sepolia.arbiscan.io/address/${factoryAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: '#6a5eff', textDecoration: 'underline' }}
+          >
+            {factoryAddress}
+          </a>
+        </p>
+
         <p>{"Welcome to OTCRX.market: a trustless OTC market designed for trading locked Cortex (CRX) tokens with ease. OTCRX allows you to trade your locked CRX for USDC today without any middlemen."}</p>
         <p>{"Due to constraints on the CRX smart contract, there is no way to choose the amount of locked CRX you would like to trade. If you want to create an offer, it will be for ALL of your locked CRX. This also means that if you purchase locked CRX when you already have a balance, the two will be added together and you will be unable to 'split' the stack."}</p>
         <p>{"When you create an offer, an escrow contract will be deployed with your address set as the owner. Then, you'll call transferAll on the CRX contract with your newly created escrow as the recipient. This will transfer ALL of your locked and unlocked CRX tokens. OTCRX recommends transferring or staking your unlocked CRX before creating an offer."}</p>
