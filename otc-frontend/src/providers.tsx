@@ -10,7 +10,7 @@ import { arbitrum, arbitrumSepolia } from 'wagmi/chains';
 const config = getDefaultConfig({
   appName: 'OTC Demo',
   projectId: import.meta.env.VITE_WC_ID as string,
-  chains: [arbitrum, arbitrumSepolia],
+  chains: [arbitrumSepolia],
   transports: {
     [arbitrumSepolia.id]: http(),
   },
