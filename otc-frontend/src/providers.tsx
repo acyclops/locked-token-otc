@@ -9,13 +9,12 @@ import { arbitrum, arbitrumSepolia } from 'wagmi/chains';
 
 const config = getDefaultConfig({
   appName: 'OTC Demo',
-  projectId: import.meta.env.VITE_WC_ID as string,   // required for WC/QR wallets
+  projectId: import.meta.env.VITE_WC_ID as string,
   chains: [arbitrum, arbitrumSepolia],
   transports: {
-    [arbitrum.id]: http(),         // or http('https://your-rpc')
     [arbitrumSepolia.id]: http(),
   },
-  ssr: false,                      // Vite SPA — false is fine
+  ssr: false,
 });
 
 const qc = new QueryClient();

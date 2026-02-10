@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from 'antd';
-import { Address, parseAbi, parseUnits } from 'viem';
+import type { Address } from 'viem';
+import { parseAbi, parseUnits } from 'viem';
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
 
 interface FillOfferProps {

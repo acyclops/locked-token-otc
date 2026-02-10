@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Address, parseAbi, parseUnits, decodeEventLog } from 'viem';
+import type { Address } from 'viem';
+import { parseAbi, parseUnits, decodeEventLog } from 'viem';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import useDebounce from './useDebounce';
 import UserCrxBalance from './UserCrxBalance';

@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { ReactElement } from 'react';
 import {
   useAccount,
   useReadContract,
   useWriteContract,
   useWaitForTransactionReceipt,
 } from 'wagmi';
-import { Address, formatUnits, parseAbi } from 'viem';
+import type { Address } from 'viem';
+import { formatUnits, parseAbi } from 'viem';
 import { lensAbi } from '../lens-abi';
 import FillOffer from './FillOffer';
 import { Button, Card } from 'antd';
@@ -40,7 +42,7 @@ interface Seller {
 
 interface SellerAddressProps {
   offerAddress: Address;
-  children: ({ seller }: { seller: string | undefined }) => JSX.Element;
+  children: ({ seller }: { seller: string | undefined }) => ReactElement;
 }
 
 interface OfferListProps {

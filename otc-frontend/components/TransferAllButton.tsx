@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from 'antd';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { Address, parseAbi } from 'viem';
+import type { Address } from 'viem';
+import { parseAbi } from 'viem';
 
 interface TransferAllButtonProps {
   cortexAddress: Address;
