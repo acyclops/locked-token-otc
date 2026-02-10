@@ -197,7 +197,7 @@ const OfferItem = ({ offer, onCancel, seller, user, usdcAddress }: OfferItemProp
         <span className={s.cardTitle}>
           Offer Address:{' '}
           <a
-            href={`https://arbiscan.io/address/${offer.offerAddress}`}
+            href={`https://sepolia.arbiscan.io/address/${offer.offerAddress}`}
             target="_blank"
             rel="noopener noreferrer"
             className={s.link}
