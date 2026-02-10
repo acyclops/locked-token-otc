@@ -10,6 +10,24 @@
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
+.balances {
+  margin-bottom: 14px;
+  line-height: 1.5;
+  font-size: 1.05rem;
+}
+
+.balances p {
+  margin: 6px 0;
+  color: #e5e5e5;
+}
+
+.balanceValue {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+
 .offerCard {
   background: var(--offer-darker);
   border-color: var(--offer-border);

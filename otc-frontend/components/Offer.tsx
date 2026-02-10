@@ -128,8 +128,14 @@ export default function OfferPage({ cortexAddress, usdcAddress, factoryAddress }
           return (
             <div className={styles.content}>
               <div className={styles.balances}>
-                <p>Locked CRX balance: {locked}</p>
-                <p>Unlocked CRX balance: {balance}</p>
+                <p>
+                  Locked CRX balance:{' '}
+                  <span className={styles.balanceValue}>{locked}</span>
+                </p>
+                <p>
+                  Unlocked CRX balance:{' '}
+                  <span className={styles.balanceValue}>{balance}</span>
+                </p>
               </div>
 
               <div className={styles.inputStack}>
